@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head >
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login App with List details</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js" type="text/javascript" charset="utf-8" async defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular-sanitize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-route.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body >
+    <div class="container">
+        <div class="center">
+            <h1>Log In</h1> </div>
+        <div class="form-container-login" ng-controller="loginCntrl">
+            <!-- alert message -->
+            <div >
+                <!-- ngRepeat: alert in alerts -->
+                {{msg}}
+              
+                <div class="list-group">
+            <a href="#/detail/{{med.id}}" class="list-group-item" ng-repeat="med in meds">
+              {{med.name}}
+                {{db}}
+            </a>
+          </div>
+            </div>
+            <form class="form-horizontal " name="userForm" id="mylogin">
+                <fieldset>
+                    <!-- USERNAME -->
+                    <div class="form-group" ng-class="{ 'has-error' : signUpForm.username.$invalid &amp;&amp; !signUpForm.username.$pristine }">
+                        <div class="input-group input-group-lg"> <span class="input-group-addon"> <span class="glyphicon glyphicon-user"></span> </span>
+                        <input ng-model="username" placeholder="User Name" type="text" name="username" class="form-control " ></div>
+                    </div>
+                    <!-- PASSWORD -->
+                    <div class="form-group">
+                        <div class="input-group input-group-lg"> <span class="input-group-addon"> <span class="glyphicon glyphicon-lock"></span> </span>
+                        <input ng-model="password" placeholder="Password" type="password" name="password" class="form-control " ></div>
+                    </div>
+                    <div class="form-group">
+                        <button ng-click="doLogin()" type="submit" class="btn btn-primary btn-lg btn-block" >Log In</button>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+<!--Master Detail Section-->
+<div class="container">
+	<div id="divMasterDetailWrapper" style="position:relative;">
+
+    <!-- First, we have our left-hand list of Customer names --> 
+    <div id="divMasterView">
+        <div id="{{customer.customerid}}" class="cssOneCompanyRecord" ng-class="{cssCompanySelectedRecord: Customer.CustomerID == selectedCustomer}" ng-repeat='Customer in listOfCustomers' ng-click="selectCustomer(Customer);">
+            <div class="cssCompanyName">{{Customer.CompanyName}}</div>
+            <div class="cssCompanyCity">{{Customer.City}}</div>
+            <div class="cssCustomerID">{{Customer.CustomerID}}</div>
+            <img src='/images/icnOffice.png' title="This is a tooltip for the company: {{Customer.CompanyName}}" class="cssCustomerIcon" />
+        </div>
+    </div>
+
+    <!-- Then, we have our right-hand panel, showing one Customer's orders --> 
+    <div id="divDetailView">
+        <!-- Get AngularJS to create one DIV for each Order that this Customer has made. --> 
+        <div id="Order_{{Order.OrderID}}" ng-repeat="Order in listOfOrders" class="cssOneOrderRecord">
+            <!-- Each Order will have a header bar, with Order ID and date. --> 
+            <div class="cssOneOrderHeader">
+                <div class="cssOrderID">Order # {{Order.OrderID}}</div>
+                <div class="cssOrderDate">Order Date: {{Order.OrderDate}}</div>
+            </div>
+
+            <!-- AngularJS will create one DIV for each Product in this particular Order --> 
+            <div class="cssOneProductRecord" ng-repeat='Product in Order.ProductsInBasket' ng-class="{ cssProductEven: (($index%2) == 0), cssProductOdd: ($index%2)}">
+                <div class="cssOneProductQty">{{Product.Quantity}}</div>
+                <div class="cssOneProductName">{{Product.ProductName}}</div>
+                <div class="cssOneProductPrice">@ {{Product.UnitPrice | currency}}</div>
+                <div class="cssOneProductSubtotal">{{Product.UnitPrice * Product.Quantity | currency}}</div>
+            </div>
+
+            <!-- The fiddly bit - calculating totals for this Order --> 
+            <div class="cssOneOrderTotal">
+                <div class="cssOneProductQty">
+                    {{Order.ProductsInBasket|countItemsInOrder}} item(s), {{Order.ProductsInBasket.length}} product(s)
+                </div>
+                <div class="cssOneProductSubtotal"> 
+                    {{Order.ProductsInBasket|orderTotal | currency}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!--Angular Route -->
+<p><a href="#/!">Main</a></p>
+
+<a href="#!london">City 1</a>
+<a href="#!paris">City 2</a>
+
+<p>Click on the links to read about London and Paris.</p>
+
+<div ng-view></div>
+
+</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+</html>
